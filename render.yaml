@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: vendalink-vhembe
+    env: node
+    plan: free
+    buildCommand: |
+      cd backend && npm install
+      cd ../frontend && npm install && npm run build
+      cd ../backend && NODE_ENV=production node src/db/seed.js
+    startCommand: node backend/src/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_PATH
+        value: ./vendalink.db
+      - key: JWT_SECRET
+        generateValue: true        # Render auto-generates a secure random value
+      - key: FRONTEND_URL
+        value: https://vendalink-vhembe.onrender.com
